@@ -59,6 +59,15 @@ app.use('/uploads', express.static(path.join(publicDir, 'uploads')));
 // Mount versioned API routes
 app.use('/api/v1', apiRouter);
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'FitOS Backend is running 🚀',
+    health: '/health',
+    api: '/api/v1'
+  });
+});
+
 // Root Healthcheck
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', time: new Date() });
