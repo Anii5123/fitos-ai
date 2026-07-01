@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fittrack-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fittrack-frontend
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:latest
+    container_name: fittrack-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - fittrack-db-data:/data/db
+    restart: unless-stopped
+
+volumes:
+  fittrack-db-data:
+    driver: local
